@@ -1,6 +1,10 @@
 <?php
 class ShopProduct
 {
+	const AVAILABLE = 0;
+	const OUT_OF_STOCK = 1;
+
+    protected $id = 0;
     private $title;
     private $producerMainName;
     private $producerFirstName;
@@ -30,6 +34,11 @@ class ShopProduct
         $base = "{$this->title} ( {$this->producerMainName}, ";
         $base .= "{$this->producerFirstName} )";
         return $base;
+    }
+
+    public function setId(int $id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -96,5 +105,46 @@ class ShopProduct
     public function setDiscount($discount)
     {
         $this->discount = $discount;
+    }
+
+    public static function getInstance(int $id, \PDO $pdo): ShopProduct
+    {
+        $stmt = $pdo->prepare("select * from products where id=?");
+        $result = $stmt->execute([$id]);
+        $row = $stmt->fetch();
+
+        if (empty($row)){
+            return null;
+        }
+
+        if ($row['type'] == "book"){
+            $product = new BookProduct(
+                $row['title'],
+                $row['firstname'],
+                $row['mainname'],
+            (float) $row['price'],
+                (int) $row['numpages']
+            );
+        }elseif ($row['type'] == "cd"){
+            $product = new CdProduct(
+                $row['title'],
+                $row['firstname'],
+                $row['mainname'],
+                (float) $row['price'],
+                (int) $row['playlength']
+            );
+        }else{
+            $firstname = (is_null($row['firstname']))? "" : $row ['firstname'] ;
+            $product = new ShopProduct(
+                $row['title'],
+                $row['firstname'],
+                $row['mainname'],
+                (float) $row['price']
+            );
+        }
+
+        $product->setId((int) $row['id']);
+        $product->setDiscount((int) $row['discount']);
+        return $product;
     }
 }

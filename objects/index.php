@@ -8,3 +8,19 @@ $product2 = new CdProduct("Классическая музыка. Лучшее",
 
 echo $productl->getSummaryLine()."<br>";
 echo $product2->getSummaryLine();
+?>
+<br>--------------------------<br>
+
+<?php
+$dsn = "sqlite:/..\products.db";
+$pdo = new \PDO($dsn, null, null);
+$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+//$result = $pdo->exec("CREATE TABLE products (id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT, firstname TEXT, mainname TEXT, title TEXT, price FLOAT, numpages INTEGER, playlength INTEGER, discount INTEGER);");
+//$result = $pdo->exec("INSERT INTO products VALUES (null, 'book', 'Javlon', 'Annamuratov', 'Kitob', 155.5, 100, 80, 10);");
+$obj = ShopProduct::getInstance(1, $pdo);
+var_dump($obj);
+$pdo = null;
+?>
+<br>--------------------------<br>
+
+

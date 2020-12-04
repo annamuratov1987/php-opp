@@ -1,5 +1,5 @@
 <?php
-class ShopProductWriter
+abstract class ShopProductWriter
 {
     private $products = [];
 
@@ -8,13 +8,5 @@ class ShopProductWriter
         $this->products[] = $shopProduct;
     }
 
-    public function write($shopProduct){
-        $str = "";
-        foreach ($this->products as $ShopProduct){
-            $str .= "{$shopProduct->title}: ";
-            $str .= $shopProduct->getProducer();
-            $str .= " ({$shopProduct->getPrice()})<br />\n";
-        }
-        print $str;
-    }
+    abstract public function write();
 }
