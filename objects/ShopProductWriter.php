@@ -1,7 +1,7 @@
 <?php
 abstract class ShopProductWriter
 {
-    private $products = [];
+    protected $products = [];
 
     public function addProduct(ShopProduct $shopProduct)
     {
